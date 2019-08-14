@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <checkout_onepage_index>
+        <reference name="head" ifconfig="carriers/yupick/active">
+            <action method="addCss"><stylesheet>css/yupick.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/yupick.js</name></action>
+            <!-- <block type="core/text" name="gmap.api.js"><action method="setText"><text><![CDATA[<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>]]></text></action></block>-->
+            <block type="core/template" name="maps">
+            	<action method="setTemplate"><template>yupick/linksmaps.phtml</template></action>
+            </block>            
+        </reference>
+    </checkout_onepage_index>
+    <checkout_onepage_shippingmethod>
+    	<reference name="root">
+    		<action method="setTemplate" ifconfig="carriers/yupick/active"><template>yupick/shipping.phtml</template></action>
+    	</reference>
+    </checkout_onepage_shippingmethod>
+    <sales_order_view>
+        <reference name="sales.order.info">
+            <action method="setTemplate" ifconfig="yupick/general/active"><template>yupick/info.phtml</template></action>
+        </reference>
+    </sales_order_view>
+</layout>

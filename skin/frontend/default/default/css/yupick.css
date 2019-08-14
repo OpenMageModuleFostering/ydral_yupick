@@ -1,0 +1,22 @@
+#yupick_options .yupick_carrier_principal { margin-top: 10px; }
+#yupick_options .yupick_carrier_secundario { margin-bottom: 10px; }
+#yupick_options input { margin-right: 5px; }
+#yupick_options label { margin-right: 8px; }
+#oficinas_yupick_content { margin: 10px 0; }
+#oficinas_yupick_content select { min-width: 450px; }
+.yupick_actions { margin-top: 10px; }
+.yupick_button_search { float: left; }
+.yupick_control_options { float: left; margin-left: 15px; font-size: 12px; font-weight; bold; }
+#loadingmask { clear: both; }
+#yupick_info_map { float: left; border: 1px solid #ccc; width: 350px; height: 180px; margin-right: 10px; }
+#yupick_info_time { float: left; width: 250px; height: 180px; }
+#yupick_info_time table { width: 100%; }
+#yupick_info_time table td,
+#yupick_info_time table th { border-bottom: 2px solid #ccc; }
+#yupick_info_time table th { font-weight: bold; }
+.yclear { clear: both; }
+#yupick_info_user { margin-left: 30px; margin-bottom: 20px; }
+#yupick_info_user p { font-weight: bold; margin: 5px 0; }
+#yupick_info_user .yupick_info_user_col { float: left; margin-right: 15px; }
+#yupick_info_user .yupick_info_user_col label { display: block; margin-left: 15px; }
+.yupick-icon-checkout { margin: 0 10px; }

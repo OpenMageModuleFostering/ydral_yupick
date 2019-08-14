@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+
+<config>
+	<modules>
+		<Ydral_Yupick>
+			<version>0.4.0</version>
+		</Ydral_Yupick>
+	</modules>
+	<global>
+
+		<blocks>
+			<yupick>
+				<class>Ydral_Yupick_Block</class>
+			</yupick>
+            <checkout>
+                <rewrite>
+                    <onepage_shipping_method_available>Ydral_Yupick_Block_Checkout_Onepage_Shipping_Method_Available</onepage_shipping_method_available>
+                </rewrite>
+            </checkout>
+		</blocks>
+
+		<helpers>
+			<!-- Mage::helper('yupick') -->
+			<yupick>
+				<class>Ydral_Yupick_Helper</class>
+			</yupick>
+		</helpers>
+
+		<models>
+			<!-- Mage::getModel('yupick/yupick') -->
+			<yupick>
+				<class>Ydral_Yupick_Model</class>
+			</yupick>
+            <sales>
+                <rewrite>
+                    <order_shipment>Ydral_Yupick_Model_Ydral_Shipment</order_shipment>
+                </rewrite>
+            </sales>
+            
+            <checkout>
+                <rewrite>
+                    <type_onepage>Ydral_Yupick_Model_Type_Onepage</type_onepage>
+                </rewrite>
+            </checkout>
+            
+		</models>
+		
+		<resources>
+			<!-- Mage::getResourceModel('yupick/yupick') or Mage::getResourceSingleton('yupick/yupick') -->
+			<yupick_setup>
+				<setup>
+				    <module>Ydral_Yupick</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</yupick_setup>
+			<yupick_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</yupick_read>
+			<yupick_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</yupick_write>
+		</resources>
+		
+	</global>
+	
+	<frontend>
+		<routers>
+			<yupick>
+				<use>standard</use>
+				<args>
+					<module>Ydral_Yupick</module>
+					<frontName>yupick</frontName>
+				</args>
+			</yupick>
+		</routers>
+		<layout>
+		    <updates>
+		        <Yupick>
+		            <file>yupick.xml</file>
+		        </Yupick>
+		    </updates>
+		</layout>
+        <events>
+            <checkout_controller_onepage_save_shipping_method>
+                <observers>
+                    <ydral_yupick_shipping_observer>
+                        <type>model</type>
+                        <class>Ydral_Yupick_Helper_Data</class>
+                        <method>setOficinaYupickRecogida</method>
+                    </ydral_yupick_shipping_observer>
+                </observers>
+            </checkout_controller_onepage_save_shipping_method>
+            <checkout_onepage_controller_success_action>
+                <observers>
+                    <ydral_yupick_order_observer>
+                        <type>model</type>
+                        <class>Ydral_Yupick_Helper_Data</class>
+                        <method>setOficinaYupickRecogidaOrder</method>
+                    </ydral_yupick_order_observer>
+                </observers>
+            </checkout_onepage_controller_success_action>
+        </events>
+	</frontend>
+	<adminhtml>
+   		<layout>
+            <updates>
+                <yupick>
+                    <file>yupick.xml</file>
+                </yupick>
+            </updates>
+        </layout>
+		<acl>
+		    <resources>
+		        <admin>
+			        <children>
+			            <system>
+			                <children>
+			                    <config>
+			                        <children>
+			                            <yupick translate="title" module="yupick">
+			                                <title><![CDATA[Yupick Configuraci&oacute;n]]></title>
+			                            </yupick>
+			                        </children>
+			                    </config>
+			                </children>
+			            </system>
+			        </children>
+			    </admin>
+		    </resources>
+		</acl>
+    </adminhtml>
+	<admin>
+    	<routers>
+            <yupick>
+                <use>admin</use>
+                <args>
+                    <module>Ydral_Yupick</module>
+                    <frontName>yupick</frontName>
+                </args>
+            </yupick>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <ydral_yupick before="Mage_Adminhtml">Ydral_Yupick_Registro</ydral_yupick>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+	</admin>
+	<default>
+		<yupick>
+			<general>
+				<active>0</active>
+				<etiquetador>76Hv8rzPr9tm8x78vsHkfd3hu</etiquetador>
+				<entrega_url>http://www.yupick.es/yupick.clientes/webservice/WSEntregas.php?wsdl</entrega_url>
+				<etiqueta_url>http://www.yupick.es/yupick.clientes/webservice/etiquetaslaser.php</etiqueta_url>
+				<situacion_url>http://www.yupick.es/yupick.clientes/webservice/WSsituacionactual.php?wsdl</situacion_url>
+				<trazabilidad_url>http://www.yupick.es/yupick.clientes/webservice/WStrazabilidad.php?wsdl</trazabilidad_url>
+				<entrega_url_pre>http://82.223.239.219/yupick.clientes/webservice/WSEntregas.php?wsdl</entrega_url_pre>
+				<etiqueta_url_pre>http://82.223.239.219/yupick.clientes/webservice/etiquetaslaser.php</etiqueta_url_pre>
+				<situacion_url_pre>http://82.223.239.219/yupick.clientes/webservice/WSsituacionactual.php?wsdl</situacion_url_pre>
+				<trazabilidad_url_pre>http://82.223.239.219/yupick.clientes/webservice/WStrazabilidad.php?wsdl</trazabilidad_url_pre>
+			</general>
+	    </yupick>
+	    <carriers>
+            <yupick>
+                <active>0</active>
+                <title><![CDATA[Recoger paquete en tu punto Yupick!]]></title>
+                <model>yupick/ydral_recogeroficina</model>
+                <gateway_url>http://www.yupick.es/yupick.clientes/webservice/WSpuntoentrega.php?wsdl</gateway_url>
+                <gateway_url_pre>http://82.223.239.219/yupick.clientes/webservice/WSpuntoentrega.php?wsdl</gateway_url_pre>
+            </yupick>
+		</carriers>
+	</default>
+</config>

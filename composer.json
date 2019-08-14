@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Ydral_Yupick",
+    "type": "magento-module",
+    "license": "OSL-3.0",
+    "homepage": "",
+    "description": "Módulo para Magento para integrar los puntos de recogida de Yupick!",
+    "authors": [
+    {
+        "name": "Ydral",
+        "email": "webmaster@ydral.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<layout>	
+	<adminhtml_sales_order_view>
+		<reference name="order_tab_info">
+			<action method="setTemplate" ifconfig="carriers/yupick/active">
+				<template>yupick/tab_info.phtml</template>
+			</action>
+		</reference>
+	</adminhtml_sales_order_view>
+</layout>
