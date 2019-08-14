@@ -1,0 +1,265 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category   design_default
+ * @package    Mage
+ * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
+ * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php if (!($_shippingRateGroups = $this->getShippingRates())): ?>
+    <strong><?php echo $this->__('Sorry, no quotes are available for this order at this time.') ?></strong>
+<?php else: ?>
+    <?php if (count($_shippingRateGroups)=='1' && Mage::getStoreConfig('onestepcheckout/general/hide_shipping_method')):?>
+        <dl class="shipment-methods" style="display: none">
+            <?php foreach ($_shippingRateGroups as $code => $_rates): ?>
+            <dd><?php echo $this->getCarrierName($code) ?></dd>
+                <?php foreach ($_rates as $_rate): ?>
+                <dt style="margin-bottom: 5px;">
+                   <?php if ($_rate->getErrorMessage()): ?>
+                   <ul class="messages"><li class="error-msg"><ul><li><?php echo $_rate->getErrorMessage() ?></li></ul></li></ul>
+                   <?php else: ?>
+                   <input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>" checked="checked" />
+                   <label for="s_method_<?php echo $_rate->getCode() ?>"><!--<b><?php echo $this->getCarrierName($code) ?>:</b>--> <?php echo $_rate->getMethodTitle() ?>
+                        <strong>
+                        <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+                        <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+                        <?php echo $_excl; ?>
+                        <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                            (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                        <?php endif; ?>
+                        </strong>
+                        <?php /* Yupick! */ ?>
+                        <?php if ($_rate->getCode() === 'yupick_yupick'): ?>
+                        <img src="<?php echo($this->getSkinUrl('images/yupick/logo_small.gif')) ?>" alt="<?php echo Mage::helper('yupick')->__('Yupick') ?>" class="yupick-icon-checkout v-middle" />&nbsp;
+                        <a href="http://www.yupick.es/quees.html" target="_blank" onclick="nuevaVentana(this.href,'quees','400','480','yes');return false;"><?php echo Mage::helper('yupick')->__('&iquest;Qu&eacute; es Yupick!?') ?></a>
+                        <?php endif; ?>
+                        <?php /* End Yupick! */ ?>
+                    </label>
+                    
+                    
+                    <?php
+                    /**
+                    *   Opciones:
+                    *       + Parking
+                    *       + Wi-Fi
+                    *       + Alimentacion
+                    *       + Prensa/Revistas
+                    *       + Tarjeta de Credito
+                    *       + Abierto mas de las 20h
+                    *       + Abierto sabados tarde
+                    *       + Abierto domingos
+                    */
+                    if ($_rate->getCode() === 'yupick_yupick'):
+                    ?>
+                    <br />
+                    <?php /* <form id="yupick_options" name="yupick_options" action=""> */ ?>
+                    	<!-- OJO cambios -->
+                        <!-- <input type="hidden" id="codigoPostal" name="codigoPostal" value="<?php echo $this->getQuote()->getShippingAddress()->getPostcode(); ?>" />-->
+                        
+                        <!-- no funciona en https <input type="hidden" id="checkUrl" name="checkUrl" value="<?php echo Mage::getUrl("yupick/index/getdata"); ?>" /> -->
+                        <input type="hidden" id="checkUrl" name="checkUrl" value="<?php echo Mage::getUrl("yupick/index/getdata", array('_secure' => true)); ?>" />
+                        <input type="hidden" id="skinPath" name="skinPath" value="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN); ?>" />
+                        
+                        <div id="yupick_carrier_principal" class="yupick_carrier_principal" style="display: none; ">
+                        	<!-- OJO cambios -->
+                        	Calle: <input type="text" id="direccion" name="direccion" size="50" value="<?php echo $this->getQuote()->getShippingAddress()->getStreetFull() . ', ' . $this->getQuote()->getShippingAddress()->getCity() . ', ' . $this->getQuote()->getShippingAddress()->getRegion();?>" style="width: 240px; " />
+                            &nbsp;C&oacute;d.Postal:<input type="text" id="codigoPostal" name="codigoPostal" size="10" value="<?php echo $this->getQuote()->getShippingAddress()->getPostcode(); ?>" />
+                            <br>
+                        	<input id="option_mas20" name="option_mas20" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Est&aacute; abierto m&aacute;s de las 20h.'); ?></label>
+                            <input id="option_sabados" name="option_sabados" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Abierto los s&aacute;bados tarde.'); ?></label>
+                            <input id="option_domingos" name="option_domingos" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Abierto los domingos.'); ?></label>
+                        </div>
+                        <div id="yupick_carrier_secundario" class="yupick_carrier_secundario" style="display: none; ">
+                            <input id="option_parking" name="option_parking" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Parking.'); ?></label>
+                            <input id="option_wifi" name="option_wifi" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Wi-Fi.'); ?></label>
+                            <input id="option_alimentacion" name="option_alimentacion" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Alimentaci&oacute;n.'); ?></label>
+                            <input id="option_prensa" name="option_prensa" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Prensa / Revistas.'); ?></label>
+                            <input id="option_tarjeta" name="option_tarjeta" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Pagar con tarjeta de cr&eacute;dito.'); ?></label>
+                        </div>
+
+                        <div class="yupick_actions">
+                            <div class="yupick_button_search">
+                                <input type="button" value="Buscar" onclick="PuntosYupick.getPuntosYupick(); return false; " />
+                            </div>
+                            <div class="yupick_control_options">
+                                <a href="#" onclick="PuntosYupick.changeYupickOptions();"><span id="yupick_options_text"><?php echo $this->__('M&aacute;s opciones de b&uacute;squeda') ?></span></a>
+                            </div>
+                        </div>
+                        
+                    <?php /* </form> */ ?>
+                    <br />
+                    <div id="oficinas_yupick_content" style="display: none; ">
+                        <select id="oficinas_yupick" name="oficinas_yupick" onchange="PuntosYupick.yupickInfo();" style="width: 240px; min-width: 240px; "></select>
+                        <input type="hidden" id="oficinas_yupick_data" name="oficinas_yupick_data" value="" />
+                    </div>
+                    
+                    <div class="yclear"></div>
+                    <div id="yupick_info_map" style="display: none; width: 240px; "></div>
+                    <div id="yupick_info_time" style="display: none; width: 240px; "></div>
+                    <div class="yclear"></div>
+                    <div id="yupick_info_user" style="display: none; margin-left: 0; max-width: 240px; ">
+                        <p><?php echo $this->__('&iquest;C&oacute;mo prefiere ser informado de cuando puede recoger su compra?') ?></p>
+                        <div class="yupick_info_user_col">
+                            <label><?php echo $this->__('Email') ?></label>
+                            <input type="radio" name="yupick_type_alert" id="yupick_type_alert" value="Email" checked="checked" />
+                            <input type="text" name="yupick_type_alert_email" id="yupick_type_alert_email" value="<?php echo $this->getQuote()->getShippingAddress()->getEmail(); ?>" style="width: 200px; " />
+                        </div>
+                        <div class="yupick_info_user_col">
+                            <label><?php echo $this->__('SMS - Tel&eacute;fono M&oacute;vil') ?></label>
+                            <input type="radio" name="yupick_type_alert" id="yupick_type_alert" value="SMS" />
+                            <input type="text" name="yupick_type_alert_phone" id="yupick_type_alert_phone" value="<?php echo $this->getQuote()->getShippingAddress()->getTelephone(); ?>" />
+                        </div>
+                    </div>
+                    <div class="yclear"><br /></div>
+                    
+                    <div id="loadingmask" style="display: none;">
+                        <div class="loader" id="loading-mask-loader"><img src="<?php echo($this->getSkinUrl('images/yupick/opc-ajax-loader.gif')) ?>" alt="<?php echo $this->__('Loading...') ?>" /> <?php echo $this->__('Loading...') ?></div>
+                        <div id="loading-mask"></div>
+                    </div>
+                    
+                    <?php endif; ?>
+                    
+                    
+                   <?php endif ?>
+                   </dt>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </dl>
+    <?php else: ?>
+        <dl class="shipment-methods">
+            <?php foreach ($_shippingRateGroups as $code => $_rates): ?>
+                        <dd><?php echo $this->getCarrierName($code) ?></dd>
+                    <?php foreach ($_rates as $_rate): ?>
+                        <dt style="margin-bottom: 5px;">
+                           <?php if ($_rate->getErrorMessage()): ?>
+                            <ul class="messages"><li class="error-msg"><ul><li><?php echo $_rate->getErrorMessage() ?></li></ul></li></ul>
+                           <?php else: ?>
+                                <input name="shipping_method" type="radio" class="validate-one-required-by-name" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>"<?php if($_rate->getCode()===$this->getAddressShippingMethod()) echo ' checked="checked"' ?> />
+                                <label for="s_method_<?php echo $_rate->getCode() ?>"><!--<b><?php echo $this->getCarrierName($code) ?>:</b>--> <?php echo $_rate->getMethodTitle() ?>
+                                <strong>
+                                <?php $_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax()); ?>
+                                <?php $_incl = $this->getShippingPrice($_rate->getPrice(), true); ?>
+
+                                <?php echo $_excl; ?>
+                                <?php if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl): ?>
+                                    (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
+                                <?php endif; ?>
+                                </strong>
+                                <?php /* Yupick! */ ?>
+                                <?php if ($_rate->getCode() === 'yupick_yupick'): ?>
+                                <img src="<?php echo($this->getSkinUrl('images/yupick/logo_small.gif')) ?>" alt="<?php echo Mage::helper('yupick')->__('Yupick') ?>" class="yupick-icon-checkout v-middle" />&nbsp;
+                                <a href="http://www.yupick.es/quees.html" target="_blank" onclick="nuevaVentana(this.href,'quees','400','480','yes');return false;"><?php echo Mage::helper('yupick')->__('&iquest;Qu&eacute; es Yupick!?') ?></a>
+                                <?php endif; ?>
+                                <?php /* End Yupick! */ ?>
+                                </label>
+                                
+                                
+                                <?php
+                                /**
+                                *   Opciones:
+                                *       + Parking
+                                *       + Wi-Fi
+                                *       + Alimentacion
+                                *       + Prensa/Revistas
+                                *       + Tarjeta de Credito
+                                *       + Abierto mas de las 20h
+                                *       + Abierto sabados tarde
+                                *       + Abierto domingos
+                                */
+                                if ($_rate->getCode() === 'yupick_yupick'):
+                                ?>
+                                <br />
+                                <?php /* <form id="yupick_options" name="yupick_options" action=""> */ ?>
+                                	<!-- OJO cambios -->
+                                    <!-- <input type="hidden" id="codigoPostal" name="codigoPostal" value="<?php echo $this->getQuote()->getShippingAddress()->getPostcode(); ?>" />-->
+                                    
+                                    <!-- no funciona en https <input type="hidden" id="checkUrl" name="checkUrl" value="<?php echo Mage::getUrl("yupick/index/getdata"); ?>" /> -->
+                                    <input type="hidden" id="checkUrl" name="checkUrl" value="<?php echo Mage::getUrl("yupick/index/getdata", array('_secure' => true)); ?>" />
+                                    <input type="hidden" id="skinPath" name="skinPath" value="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN); ?>" />
+                                    
+                                    <div id="yupick_carrier_principal" class="yupick_carrier_principal" style="display: none; ">
+        	                        	<!-- OJO cambios -->
+        	                        	Calle: <input type="text" id="direccion" name="direccion" size="50" value="<?php echo $this->getQuote()->getShippingAddress()->getStreetFull() . ', ' . $this->getQuote()->getShippingAddress()->getCity() . ', ' . $this->getQuote()->getShippingAddress()->getRegion();?>" style="width: 240px; "/>
+        	                            &nbsp;C&oacute;d.Postal:<input type="text" id="codigoPostal" name="codigoPostal" size="10" value="<?php echo $this->getQuote()->getShippingAddress()->getPostcode(); ?>" />
+        	                            <br>
+                                    	<input id="option_mas20" name="option_mas20" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Est&aacute; abierto m&aacute;s de las 20h.'); ?></label>
+                                        <input id="option_sabados" name="option_sabados" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Abierto los s&aacute;bados tarde.'); ?></label>
+                                        <input id="option_domingos" name="option_domingos" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Abierto los domingos.'); ?></label>
+                                    </div>
+                                    <div id="yupick_carrier_secundario" class="yupick_carrier_secundario" style="display: none; ">
+                                        <input id="option_parking" name="option_parking" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Parking.'); ?></label>
+                                        <input id="option_wifi" name="option_wifi" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Wi-Fi.'); ?></label>
+                                        <input id="option_alimentacion" name="option_alimentacion" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Alimentaci&oacute;n.'); ?></label>
+                                        <input id="option_prensa" name="option_prensa" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Prensa / Revistas.'); ?></label>
+                                        <input id="option_tarjeta" name="option_tarjeta" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Pagar con tarjeta de cr&eacute;dito.'); ?></label>
+                                    </div>
+        
+                                    <div class="yupick_actions">
+        	                            <div class="yupick_button_search">
+                                            <input type="button" value="Buscar" onclick="PuntosYupick.getPuntosYupick(); return false; " />
+                                        </div>
+                                        <div class="yupick_control_options">
+                                            <a href="#" onclick="PuntosYupick.changeYupickOptions();"><span id="yupick_options_text"><?php echo $this->__('M&aacute;s opciones de b&uacute;squeda') ?></span></a>
+                                        </div>
+                                    </div>
+                                    
+                                <?php /* </form> */ ?>
+                                <br />
+                                <div id="oficinas_yupick_content" style="display: none; ">
+                                    <select id="oficinas_yupick" name="oficinas_yupick" onchange="PuntosYupick.yupickInfo();" style="width: 240px; min-width: 240px; "></select>
+                                    <input type="hidden" id="oficinas_yupick_data" name="oficinas_yupick_data" value="" />
+                                </div>
+                                
+                                <div class="yclear"></div>
+                                <div id="yupick_info_map" style="display: none; width: 240px; "></div>
+                                <div id="yupick_info_time" style="display: none; width: 240px; "></div>
+                                <div class="yclear"></div>
+                                <div id="yupick_info_user" style="display: none; margin-left: 0; max-width: 240px; ">
+                                    <p><?php echo $this->__('&iquest;C&oacute;mo prefiere ser informado de cuando puede recoger su compra?') ?></p>
+                                    <div class="yupick_info_user_col">
+                                        <label><?php echo $this->__('Email') ?></label>
+                                        <input type="radio" name="yupick_type_alert" id="yupick_type_alert" value="Email" checked="checked" />
+                                        <input type="text" name="yupick_type_alert_email" id="yupick_type_alert_email" value="<?php echo $this->getQuote()->getShippingAddress()->getEmail(); ?>" style="width: 200px; " />
+                                    </div>
+                                    <div class="yupick_info_user_col">
+                                        <label><?php echo $this->__('SMS - Tel&eacute;fono M&oacute;vil') ?></label>
+                                        <input type="radio" name="yupick_type_alert" id="yupick_type_alert" value="SMS" />
+                                        <input type="text" name="yupick_type_alert_phone" id="yupick_type_alert_phone" value="<?php echo $this->getQuote()->getShippingAddress()->getTelephone(); ?>" />
+                                    </div>
+                                </div>
+                                <div class="yclear"><br /></div>
+                                
+                                <div id="loadingmask" style="display: none;">
+                                    <div class="loader" id="loading-mask-loader"><img src="<?php echo($this->getSkinUrl('images/yupick/opc-ajax-loader.gif')) ?>" alt="<?php echo $this->__('Loading...') ?>" /> <?php echo $this->__('Loading...') ?></div>
+                                    <div id="loading-mask"></div>
+                                </div>
+                                
+                                <?php endif; ?>
+                                
+                                
+                           <?php endif ?>
+                        </dt>
+                    <?php endforeach; ?>
+            <?php endforeach; ?>
+        </dl>
+    <?php endif; ?>
+<?php endif; ?>

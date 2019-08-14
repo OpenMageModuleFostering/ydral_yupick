@@ -190,6 +190,7 @@ class Ydral_Yupick_Model_Ydral_Recogeroficina extends Mage_Shipping_Model_Carrie
         //  reparamos los datos para sacar un xml bien formado
         $result = str_replace("<?xml version='1.0' encoding='ISO-8859-1'?><puntoentrega>", "<?xml version='1.0' encoding='ISO-8859-1'?><puntos><puntoentrega>", $result . '</puntos>');
         //$result = iconv("UTF-8", "ISO-8859-1//IGNORE", utf8_decode(trim($result)));
+        $result = utf8_decode($result);
         $result = preg_replace('/<tarjetacredito>([A-Za-z]*)<tarjetacredito>/e', "'<tarjetacredito>'.strtolower('\\1').'</tarjetacredito>'",$result); 
         $result = preg_replace('/<poslongitud>([A-Za-z0-9\.-]*)<poslongitud>/e', "'<poslongitud>' . strtolower('\\1') . '</poslongitud>'",$result); 
         $result = str_replace('</puntos>', '', $result);

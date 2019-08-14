@@ -45,6 +45,34 @@ class Ydral_Yupick_Helper_Data extends Mage_Core_Helper_Abstract
         }
         
     }
+    
+    
+    
+    public function setOficinaYupickRecogidaOrderAdminhtml($observer)
+    {
+     
+        $order = $observer->getOrder();
+        $idQuote = $order->getQuoteId();
+        $idOrder = $order->getIncrementId();
+        
+        
+        $idSelector = trim(strip_tags($this->_getRequest()->getPost('oficinas_yupick')));
+        $nombrePunto = $this->_getRequest()->getPost('oficinas_yupick_data'); 
+        
+        $_tipoAviso      = $this->_getRequest()->getPost('yupick_type_alert'); 
+        $_tipoAvisoSms   = $this->_getRequest()->getPost('yupick_type_alert_phone'); 
+        $_tipoAvisoEmail = $this->_getRequest()->getPost('yupick_type_alert_email'); 
+                
+        if (!empty($idSelector))
+        {
+            Mage::getModel('yupick/ydral_recogeroficina')->saveCheckoutData('quote', $idQuote, $idSelector, $nombrePunto, $_tipoAviso, $_tipoAvisoSms, $_tipoAvisoEmail);   
+            Mage::getModel('yupick/ydral_recogeroficina')->saveOrderData($idQuote, $idOrder);
+        }
+        
+    }
+    
+    
+    
 
 
     public function getUrlRequest($section)

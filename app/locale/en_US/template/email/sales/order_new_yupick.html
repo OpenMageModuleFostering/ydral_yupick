@@ -1,0 +1,116 @@
+<!--@subject {{var store.getFrontendName()}}: New Order # {{var order.increment_id}} @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var=$order.getCustomerName()":"Customer Name",
+"var store.getFrontendName()":"Store Name",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var order.increment_id":"Order Id",
+"var order.getCreatedAtFormated('long')":"Order Created At (datetime)",
+"var order.getBillingAddress().format('html')":"Billing Address",
+"var payment_html":"Payment Details",
+"var order.getShippingAddress().format('html')":"Shipping Address",
+"var order.getShippingDescription()":"Shipping Description",
+"layout handle=\"sales_email_order_items\" order=$order":"Order Items Grid",
+"var order.getEmailCustomerNote()":"Email Order Note"}
+@-->
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+
+<style type="text/css">
+.fin {
+	color: #333;
+}
+body {
+	background-color: #FFF;
+}
+</style>
+<body style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<div style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr>
+    <td align="center" valign="top" style="padding:20px 0 20px 0">
+        <table bgcolor="#FFFFFF" cellspacing="0" cellpadding="10" border="0" width="950" style="border:1px solid #E0E0E0; color: #F30;">
+            <!-- [ header starts here] -->
+            <tr>
+                <td valign="top"><a href="{{store url=""}}"><img src="{{var logo_url}}" alt="{{var logo_alt}}" style="margin-bottom:10px;" border="0"/></a></td>
+            </tr>
+            <!-- [ middle starts here] -->
+            <tr>
+                <td valign="top">
+            <h1 class="fin" style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;"">Hola, {{htmlescape var=$order.getCustomerName()}}</h1></tr>
+            <tr>
+                <td>
+                    <h2 class="fin" style="font-size:18px; font-weight:normal; margin:0;">Su pedido #{{var order.increment_id}} <small>(placed on {{var order.getCreatedAtFormated('long')}})</small></h2>
+                </td>
+            </tr>
+            <tr>
+                <td height="292">
+                    <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th align="left" width="467" bgcolor="#FF3300" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em; color: #FFF;">Factura:</th>
+                            <th width="10"></th>
+                            <th align="left" width="451" bgcolor="#FF3300" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em; color: #FFF;">Forma de Pago:</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td width="467" height="138" valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
+                                {{var order.getBillingAddress().format('html')}}
+                            </td>
+                            <td>&nbsp;</td>
+                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
+                                {{var payment_html}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    {{depend order.getIsNotVirtual()}}
+                    <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th align="left" width="538" bgcolor="#FF3300" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em; color: #FFF;">Dirección de envío:</th>
+                            <th width="10"></th>
+                            <th align="left" width="384" bgcolor="#FF3300" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em; color: #FFF;">Forma de envío o Recogida:</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td height="148" valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
+                                {{var order.getShippingAddress().format('html')}}
+                                &nbsp;
+                            </td>
+                            <td>&nbsp;</td>
+                            <td valign="top" style="font-size:12px; padding:7px 9px 9px 9px; border-left:1px solid #EAEAEA; border-bottom:1px solid #EAEAEA; border-right:1px solid #EAEAEA;">
+                                {{var order.getShippingDescription()}}
+                                {{block type='yupick/email' order=$order}}
+                                &nbsp;
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p>                      {{/depend}}
+                    {{layout handle="sales_email_order_items" order=$order}}                    </p>
+<p class="fin" style="font-size:12px; margin:0 0 10px 0">{{var order.getEmailCustomerNote()}}</p>
+<p class="fin" style="font-size:12px; margin:0 0 10px 0"><strong>MUCHAS GRACIAS   POR TU COMPRA.</strong><BR>
+  <BR>
+  Tu pedido se ha procesado correctamente. <BR>
+Por   favor, comprueba que todos los datos son correctos. <BR>
+<BR>
+Esperamos que   disfrutes de los productos adquiridos.</p>
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#FF3300" align="center" style="background:#EAEAEA; text-align:center;"><center>
+                  <p class="fin" style="font-size:12px; margin:0;">Gracias, <strong>{{var store.getFrontendName()}}</strong></p></center></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+</table>
+</div>
+</body>

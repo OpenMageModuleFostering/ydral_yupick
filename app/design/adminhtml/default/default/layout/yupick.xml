@@ -7,4 +7,31 @@
 			</action>
 		</reference>
 	</adminhtml_sales_order_view>
+	
+	
+	<adminhtml_sales_order_create_index>
+        <reference name="head" ifconfig="carriers/yupick/active">
+            <action method="addCss"><stylesheet>yupick.css</stylesheet></action>
+            <action method="addJs"><file>yupick.js</file></action>
+        </reference>
+        <reference name="js">
+            <block type="adminhtml/template" template="yupick/linksmaps.phtml" name="maps" />
+        </reference>
+		<reference name="shipping_method" ifconfig="carriers/yupick/active">
+			<block type="adminhtml/sales_order_create_shipping_method_form" template="yupick/form.phtml" name="form" />
+		</reference>
+	</adminhtml_sales_order_create_index>
+	
+	<adminhtml_sales_order_create_load_block_data>
+		<reference name="shipping_method" ifconfig="carriers/yupick/active">
+			<block type="adminhtml/sales_order_create_shipping_method_form" template="yupick/form.phtml" name="form" />
+		</reference>
+	</adminhtml_sales_order_create_load_block_data>
+	
+	<adminhtml_sales_order_create_load_block_shipping_method>
+		<reference name="shipping_method" ifconfig="carriers/yupick/active">
+			<block type="adminhtml/sales_order_create_shipping_method_form" template="yupick/form.phtml" name="form" />
+		</reference>
+	</adminhtml_sales_order_create_load_block_shipping_method>
+	
 </layout>

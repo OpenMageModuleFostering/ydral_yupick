@@ -3,7 +3,7 @@
 <config>
 	<modules>
 		<Ydral_Yupick>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 		</Ydral_Yupick>
 	</modules>
 	<global>
@@ -115,6 +115,17 @@
                 </yupick>
             </updates>
         </layout>
+        <events>
+            <checkout_submit_all_after>
+                <observers>
+                    <ydral_yupick_adminhtml_observer>
+                        <type>model</type>
+                        <class>Ydral_Yupick_Helper_Data</class>
+                        <method>setOficinaYupickRecogidaOrderAdminhtml</method>
+                    </ydral_yupick_adminhtml_observer>
+                </observers>
+            </checkout_submit_all_after>
+        </events>
 		<acl>
 		    <resources>
 		        <admin>
@@ -148,6 +159,7 @@
                 <args>
                     <modules>
                         <ydral_yupick before="Mage_Adminhtml">Ydral_Yupick_Registro</ydral_yupick>
+                        <!-- <ydral_yupick before="Mage_Adminhtml">Ydral_Yupick</ydral_yupick> -->
                     </modules>
                 </args>
             </adminhtml>

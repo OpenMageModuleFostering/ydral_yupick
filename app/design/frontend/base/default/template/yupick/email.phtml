@@ -1,0 +1,28 @@
+<?php
+$_order = $this->getData('order');
+
+if (!$_order)
+{
+    $lastOrderId = Mage::getSingleton('checkout/session')->getLastOrderId();
+    $_order = Mage::getSingleton('sales/order')->load($lastOrderId);
+}
+
+$_shippingMethod = $_order->getShippingMethod();
+if ($_shippingMethod == 'yupick_yupick')
+{
+    
+    $_dataRecogida = Mage::getModel('yupick/ydral_recogeroficina')->readCheckoutData('order', $_order->getRealOrderId());
+    if (!$_dataRecogida)
+    {
+        $idQuote = Mage::getSingleton('checkout/session')->getLastQuoteId();  
+        $_dataRecogida = Mage::getModel('yupick/ydral_recogeroficina')->readCheckoutData('quote', $idQuote);
+    }
+    
+    if ($_dataRecogida)
+    {
+        echo '<br />'.$_dataRecogida['info_oficina'];
+    }
+    
+}
+
+?>
