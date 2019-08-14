@@ -32,7 +32,13 @@
         <dd>
             <ul>
             <?php foreach ($_rates as $_rate): ?>
-                <?php $_radioProperty = 'name="order[shipping_method]" type="radio" onclick="order.setShippingMethod(this.value)"' ?>
+                <?php $_radioProperty = 'name="order[shipping_method]" type="radio"';
+                if ($_rate->getCode() === 'yupick_yupick') {
+					$_radioProperty .= 'onclick="PuntosYupick.getPuntosYupick();order.setShippingMethod(this.value);$(\'loading-mask\').hide();"';
+				} else {
+					$_radioProperty .= 'onclick="order.setShippingMethod(this.value)"';
+				}
+                ?>
                 <?php $_code=$_rate->getCode() ?>
                 <li>
                    <?php if ($_rate->getErrorMessage()): ?>
@@ -91,8 +97,8 @@
                             
                             <div id="yupick_carrier_principal" class="yupick_carrier_principal" style="display: none; ">
 	                        	<!-- OJO cambios -->
-	                        	Calle: <input type="text" id="direccion" name="direccion" size="50" value="<?php echo $this->getQuote()->getShippingAddress()->getStreetFull() . ', ' . $this->getQuote()->getShippingAddress()->getCity() . ', ' . $this->getQuote()->getShippingAddress()->getRegion();?>" />
-	                            &nbsp;C&oacute;d.Postal:<input type="text" id="codigoPostal" name="codigoPostal" size="10" value="<?php echo $this->getQuote()->getShippingAddress()->getPostcode(); ?>" />
+	                        	Calle: <input type="text" id="direccion" name="direccion" size="50" value="<?php echo Mage::getSingleton('core/session', array('name' => 'adminhtml'))->getYupickInfo();?>" />
+	                            &nbsp;C&oacute;d.Postal:<input type="text" id="codigoPostal" name="codigoPostal" size="10" value="" />
 	                            <br>
                             	<input id="option_mas20" name="option_mas20" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Est&aacute; abierto m&aacute;s de las 20h.'); ?></label>
                                 <input id="option_sabados" name="option_sabados" type="checkbox" value="on" />&nbsp;<label><?php echo $this->__('Abierto los s&aacute;bados tarde.'); ?></label>
@@ -118,13 +124,13 @@
                         <?php /* </form> */ ?>
                         <br />
                         <div id="oficinas_yupick_content" style="display: none; ">
-                            <select id="oficinas_yupick" name="oficinas_yupick" onchange="PuntosYupick.yupickInfo();"></select>
+                            <select id="oficinas_yupick" name="oficinas_yupick" onchange="PuntosYupick.yupickInfo();" style="min-width: 380px;"></select>
                             <input type="hidden" id="oficinas_yupick_data" name="oficinas_yupick_data" value="" />
                         </div>
                         
                         <div class="yclear"></div>
-                        <div id="yupick_info_map" style="display: none; "></div>
-                        <div id="yupick_info_time" style="display: none; "></div>
+                        <div id="yupick_info_map" style="display: none; width: 380px"></div>
+                        <div id="yupick_info_time" style="display: none; width: 380px"></div>
                         <div class="yclear"></div>
                         <div id="yupick_info_user" style="display: none; ">
                             <p><?php echo $this->__('&iquest;C&oacute;mo prefiere ser informado de cuando puede recoger su compra?') ?></p>
@@ -141,10 +147,10 @@
                         </div>
                         <div class="yclear"><br /></div>
                         
-                        <div id="loadingmask" style="display: none;">
+                        <!-- <div id="loadingmask" style="display: none;">
                             <div class="loader" id="loading-mask-loader"><img src="<?php echo($this->getSkinUrl('images/yupick/opc-ajax-loader.gif')) ?>" alt="<?php echo $this->__('Loading...') ?>" /> <?php echo $this->__('Loading...') ?></div>
-                            <div id="loading-mask"></div>
-                        </div>
+                            <div id="loading-mask" style="display: none;></div>
+                        </div> -->
                         
                         <?php endif; ?>
                         
@@ -170,6 +176,10 @@
                     (<?php echo $this->__('Incl. Tax'); ?> <?php echo $_incl; ?>)
                 <?php endif; ?>
             </strong>
+            <?php if ($_rate->getCode() === 'yupick_yupick'): ?>
+             	<?php echo "<br/>" . Mage::getSingleton('core/session', array('name' => 'adminhtml'))->getYupickInfo(); ?>
+            <?php endif; ?>
+            <input type="hidden" id="txtIdPunto" name="txtIdPunto" value="<?php echo Mage::getSingleton('core/session', array('name' => 'adminhtml'))->getYupickId(); ?>">
             <!--input type="text" class="input-text" style="width:70px"/-->
             <br/>
             <a href="#" onclick="$('order-shipping-method-info').hide();$('order-shipping-method-choose').show();return false">

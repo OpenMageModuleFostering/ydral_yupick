@@ -1,4 +1,3 @@
-
 PuntosYupick = Class.create();
 PuntosYupick.prototype = {
     
@@ -41,7 +40,7 @@ PuntosYupick.prototype = {
         	$('direccion').focus();
         } else {
 	        this.reloadurl = $('checkUrl').value;
-	        Element.show('loadingmask');
+	        //Element.show('loadingmask');
 	        if (!$('option_parking').checked) {
 	        	$('option_parking').value = '';
 	        } else {
@@ -82,7 +81,6 @@ PuntosYupick.prototype = {
 	        } else {
 	        	$('option_domingos').value = 'on';
 	        }
-	        
 	        new Ajax.Request(this.reloadurl, {
 	            method: 'post',
 	            //OJO Cambios
@@ -103,7 +101,7 @@ PuntosYupick.prototype = {
     },
     
     reloadChildren: function(transport){
-        Element.hide('loadingmask');
+        //Element.hide('loadingmask');
         $('oficinas_yupick_content').setStyle({display: 'block'});
         var jsonResponse=transport.responseText.evalJSON(true);
         this.yupickResultados = jsonResponse;
@@ -122,7 +120,7 @@ PuntosYupick.prototype = {
             }  
         );      
         
-        this.yupickInfo() 
+        this.yupickInfoBuscar(true); 
  
     },
     
@@ -140,8 +138,24 @@ PuntosYupick.prototype = {
     
     yupickInfo:function()
     {
+    	this.yupickInfoBuscar(false);
+    },
+    
+    yupickInfoBuscar:function(buscar)
+    {
         
-        var puntoActual = $('oficinas_yupick').value;
+    	if (buscar) {
+	        if ($('txtIdPunto').value != "") {
+	            var p = $('txtIdPunto').value;
+	        	$$('select#oficinas_yupick option').each(function(o) {
+	        		if (o.value == p) {
+	        			o.selected = true;
+	        			$break;
+	        		}
+	        	});
+	        }
+    	}
+    	var puntoActual = $('oficinas_yupick').value;
         this.yupickResultados.puntoentrega.each(  
             function(e) { 
                 if (e.id == puntoActual)
@@ -158,7 +172,6 @@ PuntosYupick.prototype = {
                     
                 }
             }.bind(this));
-        
     },
     
     infoGoogleMaps:function(e)

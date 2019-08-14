@@ -24,7 +24,10 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 ?>
-<?php $_order = $this->getOrder() ?>
+<?php $_order = $this->getOrder();
+Mage::getSingleton('core/session')->setYupickInfo(''); 
+Mage::getSingleton('core/session')->setYupickId('');
+?>
 <div>
     <div id="order-messages">
         <?php echo $this->getChildHtml('order_messages') ?>
@@ -70,11 +73,12 @@
                     <?php
                     /*  YUPICK START   */
                     if ($_order->getShippingMethod() == 'yupick_yupick'):
-             
                         $_dataRecogida = Mage::getModel('yupick/ydral_recogeroficina')->readCheckoutData('order', $_order->getRealOrderId());
                         if ($_dataRecogida)
                         {
                             echo '<br />'.$_dataRecogida['info_oficina'];
+                            Mage::getSingleton('core/session')->setYupickInfo($_dataRecogida['info_oficina']);
+                            Mage::getSingleton('core/session')->setYupickId($_dataRecogida['oficina_recogida']);
                         }
                         ?>
                         <br />

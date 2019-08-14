@@ -3,7 +3,7 @@
 <config>
 	<modules>
 		<Ydral_Yupick>
-			<version>0.5.1</version>
+			<version>0.6.1</version>
 		</Ydral_Yupick>
 	</modules>
 	<global>
