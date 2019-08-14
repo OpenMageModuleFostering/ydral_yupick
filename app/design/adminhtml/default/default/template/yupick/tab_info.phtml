@@ -77,6 +77,8 @@ Mage::getSingleton('core/session')->setYupickId('');
                         if ($_dataRecogida)
                         {
                             echo '<br />'.$_dataRecogida['info_oficina'];
+                            Mage::log("tabinfo :" . $_dataRecogida['info_oficina']);
+                            Mage::log("taboficina :" . $_dataRecogida['oficina_recogida']);
                             Mage::getSingleton('core/session')->setYupickInfo($_dataRecogida['info_oficina']);
                             Mage::getSingleton('core/session')->setYupickId($_dataRecogida['oficina_recogida']);
                         }

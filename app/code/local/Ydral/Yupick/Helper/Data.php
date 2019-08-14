@@ -55,14 +55,26 @@ class Ydral_Yupick_Helper_Data extends Mage_Core_Helper_Abstract
         $idQuote = $order->getQuoteId();
         $idOrder = $order->getIncrementId();
         
-        
         $idSelector = trim(strip_tags($this->_getRequest()->getPost('oficinas_yupick')));
-        $nombrePunto = $this->_getRequest()->getPost('oficinas_yupick_data'); 
+        
+        Mage::log("punto id 1: " . $idSelector);
+        if (empty($idSelector)) {
+        	$idSelector = Mage::getSingleton('core/session', array('name' => 'adminhtml'))->getYupickId();
+        	Mage::log("punto id 2: " . $idSelector);
+        }
+        
+        $nombrePunto = $this->_getRequest()->getPost('oficinas_yupick_data');
+
+        Mage::log("punto nombre 1: " . $nombrePunto);
+        if (empty($nombrePunto)) {
+        	$nombrePunto = Mage::getSingleton('core/session', array('name' => 'adminhtml'))->getYupickInfo();
+        	Mage::log("punto nombre 2: " . $nombrePunto);
+        }
         
         $_tipoAviso      = $this->_getRequest()->getPost('yupick_type_alert'); 
         $_tipoAvisoSms   = $this->_getRequest()->getPost('yupick_type_alert_phone'); 
         $_tipoAvisoEmail = $this->_getRequest()->getPost('yupick_type_alert_email'); 
-                
+
         if (!empty($idSelector))
         {
             Mage::getModel('yupick/ydral_recogeroficina')->saveCheckoutData('quote', $idQuote, $idSelector, $nombrePunto, $_tipoAviso, $_tipoAvisoSms, $_tipoAvisoEmail);   
