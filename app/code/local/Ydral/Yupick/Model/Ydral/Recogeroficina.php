@@ -28,7 +28,13 @@ class Ydral_Yupick_Model_Ydral_Recogeroficina extends Mage_Shipping_Model_Carrie
 	        $request->setCountryId(Mage::getStoreConfig('shipping/origin/country_id', $request->getStore()))
 	                ->setPostcode(Mage::getStoreConfig('shipping/origin/postcode', $request->getStore()));
 	    }
-
+		
+	    //Yupick limite de kilos
+	    if ($request->getPackageWeight() > 20)
+	    {
+	    	return false;
+	    }
+	     
 
         /**
         *
@@ -174,9 +180,9 @@ class Ydral_Yupick_Model_Ydral_Recogeroficina extends Mage_Shipping_Model_Carrie
         if (!Mage::getStoreConfig('yupick/general/active')) return false;
         if (!Mage::getStoreConfig('yupick/general/etiquetador')) return false;
         
-        Mage::log($data);
+        //Mage::log($data);
         $URL=Mage::helper('yupick')->getUrlRequestCarrier();
-        Mage::log($URL);
+        //Mage::log($URL);
         $client = new SoapClient($URL);
         //  Realizamos la peticion
         $result = $client->getBuscarPuntos(Mage::getStoreConfig('yupick/general/etiquetador'),$data['codigoPostal'],$data['direccion'],$data['option_parking'],$data['option_wifi'],$data['option_alimentacion'],$data['option_prensa'],$data['option_tarjeta'],$data['option_mas20'],$data['option_sabados'],$data['option_domingos']);

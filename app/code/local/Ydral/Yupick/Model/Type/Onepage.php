@@ -40,9 +40,35 @@ class Ydral_Yupick_Model_Type_Onepage extends Mage_Checkout_Model_Type_Onepage
     {
         $_cp = Mage::app()->getRequest()->getPost('oficinas_yupick_data');
         
-        if ( ($shippingMethod == 'yupick_yupick') && (empty($_cp)) )
-        {
-            return array('error' => -1, 'message' => $this->_helper->__('No se ha especificado un punto de recogida.'));
+        if ($shippingMethod == 'yupick_yupick') {
+        	if (empty($_cp)) {
+            	return array('error' => -1, 'message' => $this->_helper->__('No se ha especificado un punto de recogida.'));
+        	}
+        	$_alert = Mage::app()->getRequest()->getPost('yupick_type_alert');
+        	$_email = Mage::app()->getRequest()->getPost('yupick_type_alert_email');
+        	$_movil = Mage::app()->getRequest()->getPost('yupick_type_alert_phone');
+        	
+        	if ($_alert == 'Email') {
+        		if ($_email == "" || !filter_var($_email, FILTER_VALIDATE_EMAIL)) {
+					return array('error' => -1, 'message' => $this->_helper->__('Dirección de Correo no válida.'));        		
+        		}        		
+        	} else if ($_alert == 'SMS') {
+        		if ($_movil == "" || strlen($_movil) < 9) {
+        			return array('error' => -1, 'message' => $this->_helper->__('Número de móvil no válido.'));
+        		} else {
+        			if (strlen($_movil) == 9 && substr($_movil, 0, 1) != "6" && substr($_movil, 0, 1) != "7") {
+        				return array('error' => -1, 'message' => $this->_helper->__('Número de móvil no pertenece a España.'));
+        			} else if (strlen($_movil) == 11 && substr($_movil, 0, 2) == "34"
+        				&& substr($_movil, 2, 1) != "6" && substr($_movil, 2, 1) != "7") {
+        					return array('error' => -1, 'message' => $this->_helper->__('Número de móvil no pertenece a España.'));
+                    } else if (strlen($_movil) == 12 && substr($_movil, 0, 3) == "+34"
+        		        && substr($_movil, 3, 1) != "6" && substr($_movil, 3, 1) != "7") {
+                    		return array('error' => -1, 'message' => $this->_helper->__('Número de móvil no pertenece a España.'));
+        			} else if (strlen($_movil) >= 13) {
+        				return array('error' => -1, 'message' => $this->_helper->__('Número de móvil no pertenece a España.'));
+        		    }
+        		}        		
+        	}
         }
         
         return parent::saveShippingMethod($shippingMethod);

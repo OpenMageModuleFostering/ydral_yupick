@@ -4,7 +4,7 @@ class Ydral_Yupick_IndexController extends Mage_Core_Controller_Front_Action
 {
 	public function getdataAction()
 	{
-		Mage::log($this->getRequest()->isPost());
+		//Mage::log($this->getRequest()->isPost());
 	    if ($this->getRequest()->isPost()) 
 	    {
     

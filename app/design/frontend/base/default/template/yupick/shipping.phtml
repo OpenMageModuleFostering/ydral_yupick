@@ -140,12 +140,12 @@
                         <div id="yupick_info_user" style="display: none; ">
                             <p><?php echo $this->__('&iquest;C&oacute;mo prefiere ser informado de cuando puede recoger su compra?') ?></p>
                             <div class="yupick_info_user_col">
-                                <label><?php echo $this->__('E-mail') ?></label>
+                                <label><?php echo $this->__('Email') ?></label>
                                 <input type="radio" name="yupick_type_alert" id="yupick_type_alert" value="Email" checked="checked" />
                                 <input type="text" name="yupick_type_alert_email" id="yupick_type_alert_email" value="<?php echo $this->getQuote()->getShippingAddress()->getEmail(); ?>" style="width: 200px; " />
                             </div>
                             <div class="yupick_info_user_col">
-                                <label><?php echo $this->__('Tel&eacute;fono') ?></label>
+                                <label><?php echo $this->__('SMS - Tel&eacute;fono M&oacute;vil') ?></label>
                                 <input type="radio" name="yupick_type_alert" id="yupick_type_alert" value="SMS" />
                                 <input type="text" name="yupick_type_alert_phone" id="yupick_type_alert_phone" value="<?php echo $this->getQuote()->getShippingAddress()->getTelephone(); ?>" />
                             </div>
